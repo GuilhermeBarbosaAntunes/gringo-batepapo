@@ -26,12 +26,14 @@ export default function Navbar() {
     localStorage.removeItem("accessToken");
     router.push("/");
   };
+
+  
+
   return (
     <Box bg={useColorModeValue("#08403E", "gray.800")}>
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-        <Logo
-          cursor={"pointer"}
-          onClick={() => (isAuth ? router.push("private") : router.push("/"))}
+        <Logo cursor={"pointer"}
+          onClick={() => (isAuth ? router.push("private") : router.push("/"))}          
         />
         <Flex alignItems={"center"}>
           <Stack direction={"row"} spacing={{ base: 0, md: 5, lg: 5 }}>
@@ -119,7 +121,7 @@ export const Logo = (props: any) => {
     <svg
       height={32}
       viewBox="0 0 120 28"
-      xmlns="http://www.w3.org/2000/svg"
+      xmlns="./public/logo.png"
       {...props}
     >
       <path
