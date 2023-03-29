@@ -1,47 +1,45 @@
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Box,
   FormControl,
   FormLabel,
   Input,
+  Checkbox,
   Stack,
-  Link,
   Button,
+  Link,
   Heading,
   Text,
   useColorModeValue,
-  FormErrorMessage,
-  useToast,
   InputGroup,
   InputRightElement,
-  Checkbox,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-
+import NextLink from "next/link";
 import { useContext, useEffect, useState } from "react";
-import { getAxiosInstance } from "@/services/api";
+import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
+import { getAxiosInstance } from "@/services/api";
 import { AppContext } from "@/contexts/app";
 import { useRouter } from "next/router";
-import NextLink from "next/link";
-import * as Yup from "yup";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useToast } from '@chakra-ui/react'
 
 interface IUserAuth {
-  emnial: string;
+  email: string;
   name: string;
   status: number;
   token: string;
   type: number;
 }
 
-type Iform = {
+type IForm = {
   email: string;
   password: string;
 };
 
 export default function SignIn() {
   const toast = useToast()
-
   const appContext = useContext(AppContext);
   const [showPassword, setShowPassword] = useState(false);
   const api = getAxiosInstance();
@@ -58,9 +56,9 @@ export default function SignIn() {
       .required("Required"),
   });
 
-  const onSubmit = async (values: Iform) => {
+  const onSubmit = async (values: IForm) => {
     try {
-      appContext.onOpenLoading();
+      appContext.onOpenLoading()
 
       const credentials = {
         email: values.email,
@@ -69,29 +67,29 @@ export default function SignIn() {
       const { data } = await api.post("/api/auth/signin", credentials);
       const userAuth: IUserAuth = data;
 
-      localStorage.setItem("accessToken", JSON.stringify(userAuth.token));
+      localStorage.setItem("user", JSON.stringify(userAuth));
       toast({
-        title: "Sucesso",
+        title: 'Sucesso',
         description: "Seja bem vindo!",
-        status: "success",
-        position: "top-right",
-        duration: 7000,
+        status: 'success',
+        position: 'top-right',
+        duration: 9000,
         isClosable: true,
       });
       router.push("private");
     } catch (error: any) {
       const errorMessage = error.response.data;
       toast({
-        title: "Houve um erro ",
+        title: 'Houve um erro',
         description: errorMessage,
-        status: "error",
-        position: "top-right",
-        duration: 7000,
+        status: 'error',
+        position: 'top-right',
+        duration: 9000,
         isClosable: true,
       });
-      appContext.onCloseLoading();
+      appContext.onCloseLoading()
     }
-  };
+  }
 
   return (
     <Flex
@@ -141,7 +139,7 @@ export default function SignIn() {
                     <InputGroup>
                       <Field
                         as={Input}
-                        name="passsword"
+                        name="password"
                         type={showPassword ? "text" : "password"}
                       />
                       <InputRightElement h={"full"}>
@@ -165,31 +163,22 @@ export default function SignIn() {
                       justify={"space-between"}
                     >
                       <FormControl>
-                        <Checkbox name={"rememberMe"}>
-                          Mantenha-me conectado
-                        </Checkbox>
+                        <Checkbox name={"rememberMe"}>Mantenha-me conectado</Checkbox>
                       </FormControl>
-                      <Link
-                        as={NextLink}
-                        href={"/forgotpassword"}
-                        color={"blue.400"}
-                      >
-                        Esqueceu sua senha?
+                      <Link as={NextLink} href={"/forgotpassword"}>
+                      Esqueceu sua senha?
                       </Link>
                     </Stack>
                     <Button
-                      bg={"blue.400"}
-                      color={"white"}
-                      _hover={{
-                        bg: "blue.500",
-                      }}
+                      colorScheme={"purple"}
+                      type={"submit"}
                     >
                       Entrar
                     </Button>
                     <Stack>
                       <Text align={"center"}>
                         Não tem uma conta?{" "}
-                        <Link as={NextLink} href="./signup" color={"blue.400"}>
+                        <Link as={NextLink} href="./signup" color={"#805AD5"} >
                           Cadastre-se
                         </Link>
                       </Text>
